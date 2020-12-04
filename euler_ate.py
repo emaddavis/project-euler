@@ -1,19 +1,28 @@
-import math
 ################################################################################
+def prob3():
+    n = 600851475143
+    x = 2
+
+    while x * x < n:
+        while n%x==0:
+            n=n/x
+        x += 1
+    print(n)
+prob3()
 ################################################################################
 def prob2():
-    a, b = 1, 1
+    x, y = 1, 1
     result=0
     limit = 4000000
 
-    while a<limit:
-        a, b = b, a+b
-        if a%2==0 and a<limit:
-            result += a
+    while x<limit:
+        x, y = y, x+y
+        if x%2==0 and x<limit:
+            result += x
 
     print(result)
 
-prob2()    
+#prob2()    
 ################################################################################
 def prob1():
     x = range(1,1000)
