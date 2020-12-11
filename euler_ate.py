@@ -1,4 +1,73 @@
 ################################################################################
+def prob7():
+    target = 10001
+    print(nth_prime(target))
+
+def nth_prime(target):
+    prime_list = []
+    leading_prime = 2
+    seed = 2
+    length = len(prime_list)
+
+    while(length < target):
+        prime_state = is_prime(seed)
+
+        if(prime_state):
+            leading_prime = seed
+            prime_list.append(leading_prime)
+
+        length = len(prime_list)
+        seed += 1
+
+    return leading_prime 
+
+def is_prime(m):
+    x = 2
+    n = m
+
+    while x * x <= n:
+        while n%x==0:
+            n=n/x
+        x += 1
+    return(n == m)
+prob7()
+################################################################################
+def prob6():
+    low = 1
+    high = 100
+    result = square_of_sums(low, high) - sum_of_squares(low, high)
+    print(result)
+
+def square_of_sums(low, high):
+    high += 1
+    x_range = range(low, high)
+    result = 0
+
+    for x in x_range:
+        result += x
+    
+    result = result * result
+    return result
+
+def sum_of_squares(low, high):
+    high += 1
+    x_range = range(low, high)
+    result = 0
+
+    for x in x_range:
+        y = x * x
+        result += y
+
+    return result
+
+#prob6()
+################################################################################
+def prob5():
+    result = 11*13*14*17*18*19*20
+    print(result)
+
+#prob5()
+################################################################################
 def prob4():
     result = []
     for i in range(1000):
@@ -25,13 +94,13 @@ def is_palindrom(n):
     
     return result
 
-prob4()
+#prob4()
 ################################################################################
 def prob3():
     n = 600851475143
     x = 2
 
-    while x * x < n:
+    while x * x <= n:
         while n%x==0:
             n=n/x
         x += 1
