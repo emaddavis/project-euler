@@ -1,4 +1,7 @@
-import math 
+import time
+import math
+from functools import reduce
+from itertools import combinations, count
 ################################################################################
 def prob1():
     x = range(1,1000)
@@ -209,5 +212,171 @@ def prob10():
         if is_prime(i):
             primes_below.append(i)
     print(sum(primes_below))
-prob10()
+#prob10()
 #################################################################################
+def prob11():
+    raw_matrix = """08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08
+49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00
+81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65
+52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91
+22 31 16 71 51 67 63 89 41 92 36 54 22 40 40 28 66 33 13 80
+24 47 32 60 99 03 45 02 44 75 33 53 78 36 84 20 35 17 12 50
+32 98 81 28 64 23 67 10 26 38 40 67 59 54 70 66 18 38 64 70
+67 26 20 68 02 62 12 20 95 63 94 39 63 08 40 91 66 49 94 21
+24 55 58 05 66 73 99 26 97 17 78 78 96 83 14 88 34 89 63 72
+21 36 23 09 75 00 76 44 20 45 35 14 00 61 33 97 34 31 33 95
+78 17 53 28 22 75 31 67 15 94 03 80 04 62 16 14 09 53 56 92
+16 39 05 42 96 35 31 47 55 58 88 24 00 17 54 24 36 29 85 57
+86 56 00 48 35 71 89 07 05 44 44 37 44 60 21 58 51 54 17 58
+19 80 81 68 05 94 47 69 28 73 92 13 86 52 17 77 04 89 55 40
+04 52 08 83 97 35 99 16 07 97 57 32 16 26 26 79 33 27 98 66
+88 36 68 87 57 62 20 72 03 46 33 67 46 55 12 32 63 93 53 69
+04 42 16 73 38 25 39 11 24 94 72 18 08 46 29 32 40 62 76 36
+20 69 36 41 72 30 23 88 34 62 99 69 82 67 59 85 74 04 36 16
+20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54
+01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48"""
+
+    matrix = convert_text_to_int_matrix(raw_matrix)
+    largest = 0
+
+    #horizontal
+    for i in range(0,(len(matrix))):
+        for j in range(0,(len(matrix[i])-3)):
+                a = matrix[i][j]
+                b = matrix[i][j+1]
+                c = matrix[i][j+2]
+                d = matrix[i][j+3]
+                n = a*b*c*d
+                if n>largest:
+                    largest = n
+
+    #vertical
+    for i in range(0,(len(matrix)-3)):
+        for j in range(0,(len(matrix[i]))):
+                a = matrix[i][j]
+                b = matrix[i+1][j]
+                c = matrix[i+2][j]
+                d = matrix[i+3][j]
+                n = a*b*c*d
+                if n>largest:
+                    largest = n
+    
+    #diagonal_up
+    for i in range(3,(len(matrix)-3)):
+        for j in range(0,(len(matrix[i])-3)):
+                a = matrix[i+3][j]
+                b = matrix[i+2][j+1]
+                c = matrix[i+1][j+2]
+                d = matrix[i][j+3]
+                n = a*b*c*d
+                if n>largest:
+                    largest = n
+    
+    #diagonal_down
+    for i in range(3,(len(matrix)-3)):
+        for j in range(0,(len(matrix[i])-3)):
+                a = matrix[i][j+3]
+                b = matrix[i+1][j+2]
+                c = matrix[i+2][j+1]
+                d = matrix[i+3][j]
+                n = a*b*c*d
+                if n>largest:
+                    largest = n
+
+    print(largest)
+
+def convert_text_to_int_matrix(raw_matrix):
+    text_matrix_line = raw_matrix.split("\n")
+    text_matrix = []
+    for i in text_matrix_line:
+        text_matrix.append(i.split())
+    
+    matrix = []
+    for i in range(0, len(text_matrix)):
+        row = []
+        for j in range(0, len(text_matrix[i])):
+            row.append(int(text_matrix[i][j]))
+        matrix.append(row)
+
+    return matrix
+
+#prob11()
+#################################################################################
+def prob12():
+    divisors = []
+    limit = 500
+    count = 1
+    while len(divisors) <= limit:
+        divisors = []
+        for i in range(1,(count+1)):
+            if count % i == 0:
+                divisors.append(i)
+        if len(divisors) >= limit:
+            print(count)
+        count += 1
+    
+    print(t2-t1)
+
+#prob12()
+#################################################################################
+def prob12a():
+    count = 1
+    array = []
+    while len(array) < 10:
+        array.append(count)
+        print(sum(array))
+        count += 1
+
+def get_divisors(number):
+    divisors = []
+    count = 1
+    while count <= number:
+        if number % count == 0:
+            divisors.append(count)
+    return divisors 
+
+#get_divisors(28)
+#prob12a()
+#################################################################################
+def prob12b():
+    triangle_summands = [1]
+    triangle_factors = []
+
+    while len(triangle_factors) < 500:
+        triangle_summands.append(triangle_summands[-1] + 1)
+        triangle_factors = get_factors(sum(triangle_summands))
+        print(triangle_summands)
+        print(len(triangle_factors))
+
+def get_factors(number):
+    factors = []
+    for n in range(1, number+1):
+        if number % n == 0:
+            factors.append(n)
+    return factors
+
+#prob12b()
+#################################################################################
+def prob12e():
+    leading_triangle_number = 1
+    step = 2
+    triangle_factors = []
+    toggle = True
+    while toggle:
+        leading_triangle_number = leading_triangle_number + step
+        step += 1
+        triangle_factors = get_factors(leading_triangle_number)
+        #print(triangle_factors)
+        #print(leading_triangle_number)
+        print(len(triangle_factors), leading_triangle_number)
+        if (len(triangle_factors) > 500):
+            print(leading_triangle_number)
+            toggle = False
+        
+#prob12e()
+
+def play():
+    arr = [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 15, 20, 21, 24, 28, 30, 35, 40, 42, 56, 60, 70, 84, 105, 120, 140, 168, 210, 280, 420, 840]
+    print(len(arr))
+
+play()
